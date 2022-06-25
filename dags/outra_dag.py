@@ -19,11 +19,24 @@ def task_tchau4():
     print('ola, isso é um testinho2')
 
 
+queries = {
+    "query1": "olá tudo bem",
+    "query2": "ola 2",
+    "query3": "clarissa olá",
+    "query4": "oi"
+}
+
+
+def task_final():
+    for query in queries.items():
+        print(f"Nome da query: {query[0]}, Item da query: {query[1]}")
+
+
 with DAG(
-    dag_id='outra_dag',
-    description='Dag de teste',
-    schedule_interval='0 17 * * *',
-    tags=["testinho"],
+    dag_id='clarissa_dag_queries_teste',
+    description='Dag de teste query',
+    schedule_interval='0 20 * * *',
+    tags=["testinho", "cla", "query"],
     start_date=datetime(2022, 1, 1),
     catchup=False,
     default_args={
@@ -64,4 +77,14 @@ with DAG(
         python_callable=task_tchau3,
     )
 
-    [tchau, tchau3, tchau2, tchau5, tchau6] >> tchau4
+    tchau7 = PythonOperator(
+        task_id='task_tchau7',
+        python_callable=task_tchau3,
+    )
+
+    task_final = PythonOperator(
+        task_id='task_final',
+        python_callable=task_final,
+    )
+
+tchau7 >> [tchau, tchau3, tchau2, tchau5, tchau6] >> tchau4 >> task_final
